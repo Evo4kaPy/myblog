@@ -1,9 +1,13 @@
 from django.shortcuts import render
 from .models import Post
 from .forms import CommentForm
+from django.core.paginator import Paginator
 
 def post_list(request):
     posts = Post.objects.all().order_by('-published_date')
+    paginator = Paginator(posts_list, 3)
+    page_number = request.GET.get('page')
+    posts = paginator.get_page(page_number)
     return render(request,'blog/post_list.html', {'posts': posts})
 def post_detail(request, pk):
     post = Post.objects.get(id=pk)
